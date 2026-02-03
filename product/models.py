@@ -1,28 +1,31 @@
 from django.db import models
-
-# Create your models here.
-
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name 
+from django.db.models import Avg
 
 
-class Product(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
+class CategoryModel(models.Model):
+    name = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.title
+    def __str__(self) -> str:
+        return f"{self.name}"
+    
+    def products_count(self)-> int:
+        return self.products.count() 
+    
+class ReviewModel(models.Model):
+    text = models.CharField(max_length=500)
+    rating = models.IntegerField(choices=((i, i) for i in range(1, 5+1)), default=3) # type: ignore
+    product = models.ForeignKey('ProductModel', on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"{self.product} - {self.rating}"
     
 
-class Review(models.Model):
-    text = models.TextField
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="review")
+class ProductModel(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=1000)
+    price = models.FloatField()
+    category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE, related_name='products')
+    rating = models.ManyToManyField(ReviewModel, blank=True)
 
-    def __str__(self):
-        return f"Review for {self.product.title}"
-    
+    def __str__(self) -> str:
+        return f"{self.title} - {self.price}"

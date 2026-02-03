@@ -1,8 +1,15 @@
 from django.contrib import admin
-from .models import Category, Product, Review
+from product.models import CategoryModel, ProductModel, ReviewModel
 
-# Register your models here.
 
-admin.site.register(Category)
-admin.site.register(Product)
-admin.site.register(Review)
+@admin.register(ProductModel)
+class ProductModelAdmin(admin.ModelAdmin):
+    list_display = 'title price category'.split()
+
+@admin.register(CategoryModel)
+class CategoryModelAdmin(admin.ModelAdmin):
+    list_display = 'name'.split()
+
+@admin.register(ReviewModel)
+class ReviewModelAdmin(admin.ModelAdmin):
+    list_display = 'text product'.split()
