@@ -69,3 +69,4 @@ class ReviewValidateSerializer(serializers.Serializer):
     text = serializers.CharField(max_length=500)
     rating = serializers.IntegerField(min_value=1, max_value=5, required=False)
     product_id = serializers.IntegerField()
+

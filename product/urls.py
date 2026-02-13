@@ -1,6 +1,7 @@
-from django.urls import path
-from .views import ProductListCreateView
+from django.urls import path 
+from . import views 
 
 urlpatterns = [
-    path('films/', ProductListCreateView.as_view(), name='film-list-create'),
+    path('', views.products_list_api_view),
+    path('<int:id>/', views.products_detail_api_view)
 ]
