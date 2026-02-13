@@ -4,35 +4,34 @@ from .models import ConfirmCode
 import random
 
 
-class UserCreateSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
-    password = serializers.CharField()
-    email = serializers.EmailField()
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    confirmation_code = serializers.CharField(read_only=True)
 
-    def validate_username(self, username):
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError("User already exists!")
-        return username
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "password", "confirmation_code"]
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            **validated_data,
+        password = validated_data.pop("password")
+        user = User.objects.create(
+            username=validated_data["username"],
+            email=validated_data.get("email", ""),
             is_active=False
         )
+        user.set_password(password)
+        user.save()
 
         code = str(random.randint(100000, 999999))
         ConfirmCode.objects.create(user=user, code=code)
 
-        print("CONFIRM CODE:", code)  
-
+        user.confirmation_code = code 
         return user
-
-
-class ConfirmUserSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    
+class ConfirmSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=6)
 
 
-class UserAuthSerializer(serializers.Serializer):
+class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField()
+    password = serializers.CharField()        
