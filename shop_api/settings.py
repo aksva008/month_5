@@ -21,12 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&6*q)s_ib-n@_noc1@hb1*ju$nhd53t%ewk3i(dcp(as@62$&y'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,10 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'product',  
     'rest_framework',
-    'users',
     'rest_framework.authtoken',
+    'users',
 ]
 
 from datetime import timedelta
@@ -143,3 +143,5 @@ EMAIL_HOST_USER = 'akylaiakisheva008@gmail.com'
 EMAIL_HOST_PASSWORD = 'sawe jskd eldp alde'
 DEFAULT_CHARSET = 'utf-8'
 EMAIL_CHARSET = 'utf-8'
+
+AUTH_USER_MODEL = 'users.CustomUser'
